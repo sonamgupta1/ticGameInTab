@@ -1,4 +1,4 @@
-tic_tac_toe.controller('profileCtrl', function ($scope, $http, $state, localStorageService) {
+tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state, localStorageService) {
 
 
   $scope.user = {};
@@ -8,38 +8,49 @@ tic_tac_toe.controller('profileCtrl', function ($scope, $http, $state, localStor
 
   $scope.getProfile = function () {
 
-    $http({
-      url: 'http://localhost:8100/api/profile',
-      method: "GET",
-      params: {access_token: access_token}
-    }).success(function (result) {
+    var dfd = $q.defer();
 
-      if (parseInt(result.status) === 200) {
+    var data = [];
+    setTimeout(function () {
+      $http({
+        url: 'http://localhost:8100/api/profile',
+        method: "GET",
+        params: {access_token: access_token}
+      }).success(function (result) {
 
-        //localStorageService.set('access_token', result.data[0].access_token);
+        data.push(result);
 
-        $scope.user.name = result.data[0].full_name;
+        if (parseInt(data[0].status) === 200) {
 
-        $scope.user.user_name = result.data[0].user_name;
+          //localStorageService.set('access_token', result.data[0].access_token);
 
-        $scope.user.password = '....';
+          $scope.user.name = data[0].data[0].full_name;
 
-        if (result.data[0].gender == 0) {
-          $scope.user.gender = 'Female';
+          $scope.user.user_name = data[0].data[0].user_name;
+
+          $scope.user.password = '....';
+
+          if (result.data[0].gender == 0) {
+            $scope.user.gender = 'Female';
+          }
+          else {
+            $scope.user.gender = 'Male';
+
+          }
+
+        } else if (parseInt(data[0].status) === 400) {
+          alert(result.message);
         }
-        else {
-          $scope.user.gender = 'Male';
 
-        }
+        dfd.resolve(data);
+      }).error(function (error) {
+        alert("There is something wrong happen !!!!");
+        console.log("error", error);
+      });
+    })
+    return dfd.promise;
+  }
 
-      } else if (parseInt(result.status) === 400) {
-        alert(result.message);
-      }
-    }).error(function (error) {
-      alert("There is something wrong happen !!!!");
-      console.log("error", error);
-    });
-  };
   $scope.getProfile();
 
   $scope.editProfile = function () {
@@ -50,6 +61,12 @@ tic_tac_toe.controller('profileCtrl', function ($scope, $http, $state, localStor
 
     user.name = $scope.user.name;
 
+    var dfd = $q.defer();
+
+    var data = [];
+
+    setTimeout(function () {
+
     $http({
       url: 'http://localhost:8100/api/edit_profile',
       method: 'POST',
@@ -59,12 +76,15 @@ tic_tac_toe.controller('profileCtrl', function ($scope, $http, $state, localStor
         'Content-Type': 'application/json; charset=utf-8'
       }
     }).success(function (result) {
-      console.log("result for edit api", result);
-
+      data.push(result);
+      console.log("result for edit api", data[0]);
+      dfd.resolve(data);
     }).error(function (error) {
       alert("There is something wrong happen !!!!");
       console.log("error", error);
     });
+    })
+    return dfd.promise;
   }
 
 

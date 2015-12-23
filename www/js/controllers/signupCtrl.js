@@ -1,4 +1,4 @@
-tic_tac_toe.controller('signupCtrl', function ($scope, $http, $state,localStorageService) {
+tic_tac_toe.controller('signupCtrl', function ($scope, $http,$q, $state,localStorageService) {
   $scope.user        = {};
   $scope.choice      = "";
   $scope.user.gender = '';
@@ -11,61 +11,80 @@ $scope.userNameExistance = "";
 
   $scope.buttonDisable = false ;
 
-
   $scope.getGameId = function(access_token1){
 
     var user = {};
 
     var access_token = access_token1;
 
-
     user.access_token = access_token;
 
-    $http({
-      url: 'http://localhost:8100/api/initialize_game',
-      method: 'POST',
-      data: user,
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      }
-    }).success(function (result) {
-      console.log("result for game api", result);
+    var dfd = $q.defer();
 
-    }).error(function (error) {
-      console.log("error", error);
-    });
-  }
+    var data = [];
+    setTimeout(function () {
+      $http({
+        url: 'http://localhost:8100/api/initialize_game',
+        method: 'POST',
+        data: user,
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      }).success(function (result) {
+        console.log("result for game api", result);
+
+        data.push(result);
+
+        dfd.resolve(data);
+      }).error(function (error) {
+        console.log("error", error);
+      });
+
+    })
+    return dfd.promise;
+  };
 
   $scope.checkUserName = function() {
-    $http({
-      url: 'http://localhost:8100/api/user_name',
-      method: "GET",
-      params: {user_name: $scope.user.username}
-    }).success(function(result){
 
-      $scope.userNameExistance = result.data;
+    var dfd = $q.defer();
 
-      console.log("result =========", $scope.userNameExistance);
+    var data = [];
+    setTimeout(function () {
 
-      if(parseInt($scope.userNameExistance) === 1) {
+      $http({
+        url: 'http://localhost:8100/api/user_name',
+        method: "GET",
+        params: {user_name: $scope.user.username}
+      }).success(function (result) {
 
-        $scope.tic1 = 1;
+        data.push(result);
 
-        $scope.buttonDisable = true;
+        $scope.userNameExistance = data[0].data;
 
-      }
-      else{
+        console.log("result =========", $scope.userNameExistance);
 
-        $scope.tic1 = 0;
+        if (parseInt($scope.userNameExistance) === 1) {
 
-        $scope.buttonDisable = false;
+          $scope.tic1 = 1;
+
+          $scope.buttonDisable = true;
+
+        }
+        else {
+
+          $scope.tic1 = 0;
+
+          $scope.buttonDisable = false;
 
 
-      }
-    }).error(function(error) {
-      console.log("error===========", error);
-    });
+        }
+        dfd.resolve(data);
+      }).error(function (error) {
+        console.log("error===========", error);
+      });
+      return dfd.promise;
+    })
   };
 
   $scope.register = function() {
@@ -80,36 +99,45 @@ $scope.userNameExistance = "";
 
     //$scope.takePicture();
 
-    $http({
-      method : 'POST',
-      url : 'http://localhost:8100/api/sign_up',
-      data : user,
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      }
-    }).success(function(result){
+    var dfd = $q.defer();
 
-      alert(result.message);
-      if(parseInt(result.status) === 200) {
+    var data = [];
 
-        console.log("result.data ======",result.data[0].access_token);
+    setTimeout(function () {
 
-        localStorageService.set('access_token', result.data[0].access_token);
+      $http({
+        method: 'POST',
+        url: 'http://localhost:8100/api/sign_up',
+        data: user,
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      }).success(function (result) {
+        data.push(result);
+        alert(data[0].message);
+        if (parseInt(data[0].status) === 200) {
 
-        var access_token = localStorageService.get('access_token');
+          console.log("result.data ======", data[0].data[0].access_token);
 
-        $scope.getGameId(access_token);
+          localStorageService.set('access_token', data[0].data[0].access_token);
 
-        $state.go('menu.dashboard');
+          var access_token = localStorageService.get('access_token');
 
-        $scope.user = "";
-        $scope.user.username = "";
-        $scope.user.password = "";
-      }
-    }).error(function(error) {
-      alert(error.message);
-      console.log("error===========", JSON.stringify(error));
+          $scope.getGameId(access_token);
+
+          $state.go('menu.dashboard');
+
+          $scope.user = "";
+          $scope.user.username = "";
+          $scope.user.password = "";
+        }
+        dfd.resolve(data);
+      }).error(function (error) {
+        alert(error.message);
+        console.log("error===========", JSON.stringify(error));
+      })
+      return dfd.promise;
     })
   };
 

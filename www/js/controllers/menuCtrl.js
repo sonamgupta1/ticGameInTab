@@ -1,16 +1,16 @@
-tic_tac_toe.controller('menuCtrl', function ($scope, $state, $http, localStorageService) {
+tic_tac_toe.controller('menuCtrl', function($scope,$state,$http,localStorageService) {
 
-  $scope.logOut = function () {
+  $scope.logOut = function(){
 
-    var access_token = localStorageService.get('access_token');
+    var access_token =  localStorageService.get('access_token');
 
     var user = {};
 
     user.access_token = access_token;
 
-    console.log("token", access_token);
+    console.log("token",access_token);
 
-    if (access_token) {
+    if(access_token) {
 
       $http({
         url: 'http://localhost:8100/api/logOut',
@@ -31,7 +31,7 @@ tic_tac_toe.controller('menuCtrl', function ($scope, $state, $http, localStorage
         console.log("error", error);
       });
     }
-    else {
+    else{
       alert("Please login.");
     }
   }
