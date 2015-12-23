@@ -11,6 +11,32 @@ $scope.userNameExistance = "";
 
   $scope.buttonDisable = false ;
 
+
+  $scope.getGameId = function(access_token1){
+
+    var user = {};
+
+    var access_token = access_token1;
+
+
+    user.access_token = access_token;
+
+    $http({
+      url: 'http://localhost:8100/api/initialize_game',
+      method: 'POST',
+      data: user,
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    }).success(function (result) {
+      console.log("result for game api", result);
+
+    }).error(function (error) {
+      console.log("error", error);
+    });
+  }
+
   $scope.checkUserName = function() {
     $http({
       url: 'http://localhost:8100/api/user_name',
@@ -71,6 +97,9 @@ $scope.userNameExistance = "";
 
         localStorageService.set('access_token', result.data[0].access_token);
 
+        var access_token = localStorageService.get('access_token');
+
+        $scope.getGameId(access_token);
 
         $state.go('menu.dashboard');
 
