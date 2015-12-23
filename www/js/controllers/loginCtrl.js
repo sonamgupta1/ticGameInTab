@@ -6,8 +6,6 @@ tic_tac_toe.controller('loginCtrl', function ($scope, $state,$http,localStorageS
 
       var token = localStorageService.get('access_token');
 
-      console.log("token", token);
-
         $http({
           url: 'http://localhost:8100/api/login',
           method: "GET",
@@ -22,7 +20,8 @@ tic_tac_toe.controller('loginCtrl', function ($scope, $state,$http,localStorageS
 
             $state.go('menu.dashboard');
 
-            $scope.user = "";
+            $scope.user.username = "";
+            $scope.user.password = "";
 
           } else if (parseInt(result.status) === 400) {
             alert(result.message);

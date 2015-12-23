@@ -1,8 +1,46 @@
-tic_tac_toe.controller('signupCtrl', function ($scope, $http, $state,localStorageService,$cordovaCamera) {
+tic_tac_toe.controller('signupCtrl', function ($scope, $http, $state,localStorageService) {
   $scope.user        = {};
   $scope.choice      = "";
   $scope.user.gender = '';
   $scope.images      = [];
+
+
+$scope.userNameExistance = "";
+
+  $scope.tic1 = "";
+
+  $scope.buttonDisable = false ;
+
+  $scope.checkUserName = function() {
+    $http({
+      url: 'http://localhost:8100/api/user_name',
+      method: "GET",
+      params: {user_name: $scope.user.username}
+    }).success(function(result){
+
+      $scope.userNameExistance = result.data;
+
+      console.log("result =========", $scope.userNameExistance);
+
+      if(parseInt($scope.userNameExistance) === 1) {
+
+        $scope.tic1 = 1;
+
+        $scope.buttonDisable = true;
+
+      }
+      else{
+
+        $scope.tic1 = 0;
+
+        $scope.buttonDisable = false;
+
+
+      }
+    }).error(function(error) {
+      console.log("error===========", error);
+    });
+  };
 
   $scope.register = function() {
 
@@ -14,7 +52,7 @@ tic_tac_toe.controller('signupCtrl', function ($scope, $http, $state,localStorag
     user.password  = $scope.user.password;
     user.gender    = $scope.user.gender;
 
-    $scope.takePicture();
+    //$scope.takePicture();
 
     $http({
       method : 'POST',
@@ -47,34 +85,34 @@ tic_tac_toe.controller('signupCtrl', function ($scope, $http, $state,localStorag
   };
 
 
-  $scope.takePicture = function() {
-    var options = {
-      quality : 75,
-      destinationType : Camera.DestinationType.DATA_URL,
-      sourceType : Camera.PictureSourceType.CAMERA,
-      allowEdit : true,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 200,
-      targetHeight: 200,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false
-    };
-
-
-
-    $cordovaCamera.getPicture(options).then(function(imageData) {
-
-      var imgURI = "data:image/jpeg;base64," + imageData;
-
-      $scope.images.push(imgURI);
-
-    }, function(err) {
-      // An error occured. Show a message to the user
-    });
-
-    console.log("length",$scope.images.length);
-
-  }
+  //$scope.takePicture = function() {
+  //  var options = {
+  //    quality : 75,
+  //    destinationType : Camera.DestinationType.DATA_URL,
+  //    sourceType : Camera.PictureSourceType.CAMERA,
+  //    allowEdit : true,
+  //    encodingType: Camera.EncodingType.JPEG,
+  //    targetWidth: 200,
+  //    targetHeight: 200,
+  //    popoverOptions: CameraPopoverOptions,
+  //    saveToPhotoAlbum: false
+  //  };
+  //
+  //
+  //
+  //  $cordovaCamera.getPicture(options).then(function(imageData) {
+  //
+  //    var imgURI = "data:image/jpeg;base64," + imageData;
+  //
+  //    $scope.images.push(imgURI);
+  //
+  //  }, function(err) {
+  //    // An error occured. Show a message to the user
+  //  });
+  //
+  //  console.log("length",$scope.images.length);
+  //
+  //}
 
 
 });
