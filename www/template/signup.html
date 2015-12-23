@@ -1,0 +1,48 @@
+<ion-view title="Register">
+<ion-content class="has-header" padding="true">
+<div class="row">
+    <div class="col">
+        <div class="list card noMarginTopBottom">
+            <div class="item item-body">
+                <form class="list loginForm">
+                    <div class="cameraWrapper text-center" ng-click="takePicture()">
+                        <span>
+                            <!-- <i class="icon ion-person-add"></i> -->
+                             <!--<img src="img/ionic.png">-->
+                          <div class="row" ng-repeat="image in images">
+
+                            <img ng-src="{{image}}">
+
+                          </div>
+
+                            <i class="icon ion-camera"></i>
+                        </span>
+                    </div>
+                    <label name="name" class="item item-input">
+                      <input placeholder="Name" type="text" ng-model="user.name">
+                    </label>
+                    <label style="" name="userid" class="item item-input posRel">
+                        <!-- <div class="idCross"></div> -->
+                        <div class="tick"></div>
+                       <input placeholder="User Id" type="text" class="paddingUserId" ng-model="user.username">
+                    </label>
+                    <label name="password" class="item item-input">
+                      <input placeholder="Password" type="password" ng-model="user.password">
+                    </label>
+                    <ion-list class="genderWrapper">
+                    <ion-radio ng-model="user.gender" ng-value="'Male'">Male</ion-radio>
+                    <ion-radio ng-model="user.gender" ng-value="'Female'">Female</ion-radio>
+                    </ion-list>
+                    <div class="policyWrapper block">
+                        <ion-checkbox>I agree privacy policy</ion-checkbox>
+                    </div>
+                    <button class="button button-dark button-block  icon-left ion-android-create noMarginBottom signUpBorder noBorder" ng-click="register()">
+                    Sign Up
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</ion-content>
+</ion-view>
