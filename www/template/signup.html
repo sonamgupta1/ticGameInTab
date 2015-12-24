@@ -5,10 +5,19 @@
         <div class="list card noMarginTopBottom">
             <div class="item item-body">
                 <form class="list loginForm">
-                    <div class="cameraWrapper text-center">
-                        <span>
+                    <div class="cameraWrapper text-center" ng-repeat="image in images">
+                        <span ng-hide="image">
                             <!-- <i class="icon ion-person-add"></i> -->
-                             <img src="img/ionic.png">
+                             <img src="img/ionic.png" ng-click="takePicture()">
+
+                          <img ng-src="{{image}}">
+                            <i class="icon ion-camera"></i>
+                        </span>
+
+                       <span ng-show="image">
+                            <!-- <i class="icon ion-person-add"></i> -->
+
+                          <img ng-src="{{image}}" ng-click="takePicture()">
                             <i class="icon ion-camera"></i>
                         </span>
                     </div>

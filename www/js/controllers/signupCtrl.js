@@ -1,4 +1,4 @@
-tic_tac_toe.controller('signupCtrl', function ($scope, $http,$q, $state,localStorageService) {
+tic_tac_toe.controller('signupCtrl', function ($scope, $http,$q,$cordovaCamera, $state,localStorageService) {
   $scope.user        = {};
   $scope.choice      = "";
   $scope.user.gender = '';
@@ -142,34 +142,33 @@ $scope.userNameExistance = "";
   };
 
 
-  //$scope.takePicture = function() {
-  //  var options = {
-  //    quality : 75,
-  //    destinationType : Camera.DestinationType.DATA_URL,
-  //    sourceType : Camera.PictureSourceType.CAMERA,
-  //    allowEdit : true,
-  //    encodingType: Camera.EncodingType.JPEG,
-  //    targetWidth: 200,
-  //    targetHeight: 200,
-  //    popoverOptions: CameraPopoverOptions,
-  //    saveToPhotoAlbum: false
-  //  };
-  //
-  //
-  //
-  //  $cordovaCamera.getPicture(options).then(function(imageData) {
-  //
-  //    var imgURI = "data:image/jpeg;base64," + imageData;
-  //
-  //    $scope.images.push(imgURI);
-  //
-  //  }, function(err) {
-  //    // An error occured. Show a message to the user
-  //  });
-  //
-  //  console.log("length",$scope.images.length);
-  //
-  //}
+  $scope.takePicture = function() {
+    var options = {
+      quality : 75,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      allowEdit : true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 200,
+      targetHeight: 200,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false
+    };
+
+
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+
+      var imgURI = "data:image/jpeg;base64," + imageData;
+
+      $scope.images.push(imgURI);
+
+    }, function(err) {
+      // An error occured. Show a message to the user
+    });
+
+
+  }
 
 
 });

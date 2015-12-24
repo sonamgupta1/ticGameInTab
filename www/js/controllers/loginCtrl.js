@@ -1,8 +1,26 @@
 tic_tac_toe.controller('loginCtrl', function ($scope, $state,$http,$q,localStorageService) {
 
+  var token = localStorageService.get('access_token');
+
+
+  console.log("token value in login connn",token);
+
+
+  $scope.checkAuth = function(){
+
+    if(token){
+
+      $state.go('menu.dashboard');
+    }
+    else{
+      $state.go('tab.home');
+    }
+
+  }
+  $scope.checkAuth();
+
+
   $scope.user = {};
-
-
 
   $scope.getGameId = function(access_token1){
 
@@ -56,8 +74,6 @@ tic_tac_toe.controller('loginCtrl', function ($scope, $state,$http,$q,localStora
         }).success(function (result) {
           value.push(result);
           if (parseInt(value[0].status) === 200) {
-
-
 
             localStorageService.set('access_token', value[0].data[0].access_token);
 

@@ -18,6 +18,7 @@ tic_tac_toe.run(function ($ionicPlatform) {
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
+
   });
 })
 
