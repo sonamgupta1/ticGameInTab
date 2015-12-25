@@ -1,6 +1,7 @@
-tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state, localStorageService) {
+tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordovaCamera, localStorageService) {
 
-
+  $scope.images      = [];
+  
   $scope.user = {};
 
   var access_token = localStorageService.get('access_token');
@@ -87,6 +88,34 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state, localS
     return dfd.promise;
   }
 
+
+  $scope.takePicture = function() {
+    var options = {
+      quality : 75,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      allowEdit : true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 200,
+      targetHeight: 200,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false
+    };
+
+
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+
+      var imgURI = "data:image/jpeg;base64," + imageData;
+
+      $scope.images.push(imgURI);
+
+    }, function(err) {
+      // An error occured. Show a message to the user
+    });
+
+
+  }
 
 });
 

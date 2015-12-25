@@ -13,7 +13,7 @@ tic_tac_toe.controller('loginCtrl', function ($scope, $state,$http,$q,localStora
       $state.go('menu.dashboard');
     }
     else{
-      $state.go('tab.home');
+      $state.go('tabs.home');
     }
 
   }
