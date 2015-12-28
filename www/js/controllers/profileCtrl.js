@@ -1,7 +1,6 @@
 tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordovaCamera, localStorageService) {
 
-  $scope.images      = [];
-  
+
   $scope.user = {};
 
   var access_token = localStorageService.get('access_token');
@@ -62,6 +61,8 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
 
     user.name = $scope.user.name;
 
+    user.profile_image = $scope.imgURI;
+
     var dfd = $q.defer();
 
     var data = [];
@@ -106,9 +107,9 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
 
-      var imgURI = "data:image/jpeg;base64," + imageData;
+      $scope.imgURI = "data:image/jpeg;base64," + imageData;
 
-      $scope.images.push(imgURI);
+      //$scope.images.push(imgURI);
 
     }, function(err) {
       // An error occured. Show a message to the user

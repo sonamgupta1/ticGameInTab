@@ -1,8 +1,7 @@
-tic_tac_toe.controller('signupCtrl', function ($scope, $http,$q,$cordovaCamera, $state,localStorageService) {
+tic_tac_toe.controller('signupCtrl', function ($scope, $http,$q,$cordovaCamera, $state,$cordovaFileTransfer,localStorageService) {
   $scope.user        = {};
   $scope.choice      = "";
   $scope.user.gender = '';
-  $scope.images      = [];
 
 
 $scope.userNameExistance = "";
@@ -89,13 +88,12 @@ $scope.userNameExistance = "";
 
   $scope.register = function() {
 
-    console.log("$scope.user =====", $scope.user);
-
     var user       = {};
     user.name      = $scope.user.name;
     user.user_name = $scope.user.username;
     user.password  = $scope.user.password;
     user.gender    = $scope.user.gender;
+    user.profile_image = $scope.imgURI;
 
     //$scope.takePicture();
 
@@ -118,7 +116,7 @@ $scope.userNameExistance = "";
         alert(data[0].message);
         if (parseInt(data[0].status) === 200) {
 
-          console.log("result.data ======", data[0].data[0].access_token);
+          console.log("sign up result",data[0]);
 
           localStorageService.set('access_token', data[0].data[0].access_token);
 
@@ -134,7 +132,7 @@ $scope.userNameExistance = "";
         }
         dfd.resolve(data);
       }).error(function (error) {
-        alert(error.message);
+        //alert(error.message);
         console.log("error===========", JSON.stringify(error));
       })
       return dfd.promise;
@@ -155,13 +153,13 @@ $scope.userNameExistance = "";
       saveToPhotoAlbum: false
     };
 
-
-
     $cordovaCamera.getPicture(options).then(function(imageData) {
 
-      var imgURI = "data:image/jpeg;base64," + imageData;
+      //var imgURI = "data:image/jpeg;base64," + imageData;
 
-      $scope.images.push(imgURI);
+      $scope.imgURI = "data:image/jpeg;base64," + imageData;
+
+      //$scope.images.push(imgURI);
 
     }, function(err) {
       // An error occured. Show a message to the user
@@ -170,6 +168,4 @@ $scope.userNameExistance = "";
 
   }
 
-
 });
-

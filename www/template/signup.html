@@ -9,14 +9,15 @@
                     <div class="cameraWrapper text-center">
                         <span>
                             <!-- <i class="icon ion-person-add"></i> -->
-                             <img src="img/ionic.png" ng-click="takePicture()" ng-hide="images[0]">
+                             <img src="img/ionic.png" ng-click="takePicture()" ng-hide="imgURI">
 
-                          <img ng-src="{{images[0]}}" ng-click="takePicture()" ng-show="images[0]">
+                             <img ng-src="{{imgURI}}" ng-click="takePicture()" ng-show="imgURI">
 
                             <i class="icon ion-camera"></i>
                         </span>
 
                     </div>
+
 
                     <label name="name" class="item item-input">
                       <input placeholder="Name" type="text" ng-model="user.name">
