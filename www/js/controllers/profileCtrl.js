@@ -22,6 +22,8 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
 
         if (parseInt(data[0].status) === 200) {
 
+          console.log("data in edit profile",data[0]);
+
           //localStorageService.set('access_token', result.data[0].access_token);
 
           $scope.user.name = data[0].data[0].full_name;
@@ -52,6 +54,34 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
   }
 
   $scope.getProfile();
+
+  $scope.takePicture = function() {
+    var options = {
+      quality : 75,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      allowEdit : true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 200,
+      targetHeight: 200,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false
+    };
+
+
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+
+      $scope.imgURI = "data:image/jpeg;base64," + imageData;
+
+      //$scope.images.push(imgURI);
+
+    }, function(err) {
+      // An error occured. Show a message to the user
+    });
+
+
+  }
 
   $scope.editProfile = function () {
 
@@ -90,33 +120,7 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
   }
 
 
-  $scope.takePicture = function() {
-    var options = {
-      quality : 75,
-      destinationType : Camera.DestinationType.DATA_URL,
-      sourceType : Camera.PictureSourceType.CAMERA,
-      allowEdit : true,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 200,
-      targetHeight: 200,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false
-    };
 
-
-
-    $cordovaCamera.getPicture(options).then(function(imageData) {
-
-      $scope.imgURI = "data:image/jpeg;base64," + imageData;
-
-      //$scope.images.push(imgURI);
-
-    }, function(err) {
-      // An error occured. Show a message to the user
-    });
-
-
-  }
 
 });
 
