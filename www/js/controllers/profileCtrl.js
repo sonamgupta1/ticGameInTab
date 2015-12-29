@@ -13,7 +13,7 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
     var data = [];
     setTimeout(function () {
       $http({
-        url: 'http://localhost:8100/api/profile',
+        url: 'http://52.25.164.84:8000/profile',
         method: "GET",
         params: {access_token: access_token}
       }).success(function (result) {
@@ -29,6 +29,8 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
           $scope.user.name = data[0].data[0].full_name;
 
           $scope.user.user_name = data[0].data[0].user_name;
+
+          $scope.imgURI = data[0].data[0].image;
 
           $scope.user.password = '....';
 
@@ -91,7 +93,7 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
 
     user.name = $scope.user.name;
 
-    user.profile_image = $scope.imgURI;
+    user.base64ImageData = $scope.imgURI;
 
     var dfd = $q.defer();
 
@@ -100,7 +102,7 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
     setTimeout(function () {
 
     $http({
-      url: 'http://localhost:8100/api/edit_profile',
+      url: 'http://52.25.164.84:8000/edit_profile',
       method: 'POST',
       data: user,
       withCredentials: true,
@@ -110,6 +112,8 @@ tic_tac_toe.controller('profileCtrl', function ($scope,$q, $http, $state,$cordov
     }).success(function (result) {
       data.push(result);
       console.log("result for edit api", data[0]);
+
+        alert("Profile edit successfully.")
       dfd.resolve(data);
     }).error(function (error) {
       alert("There is something wrong happen !!!!");

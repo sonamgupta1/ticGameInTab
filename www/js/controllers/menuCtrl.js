@@ -13,7 +13,7 @@ tic_tac_toe.controller('menuCtrl', function($scope,$state,$http,localStorageServ
     if(access_token) {
 
       $http({
-        url: 'http://localhost:8100/api/logOut',
+        url: 'http://52.25.164.84:8000/logOut',
         method: 'POST',
         data: user,
         withCredentials: true,

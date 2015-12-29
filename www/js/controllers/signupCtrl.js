@@ -23,7 +23,7 @@ $scope.userNameExistance = "";
     var data = [];
     setTimeout(function () {
       $http({
-        url: 'http://localhost:8100/api/initialize_game',
+        url: 'http://52.25.164.84:8000/initialize_game',
         method: 'POST',
         data: user,
         withCredentials: true,
@@ -52,7 +52,7 @@ $scope.userNameExistance = "";
     setTimeout(function () {
 
       $http({
-        url: 'http://localhost:8100/api/user_name',
+        url: 'http://52.25.164.84:8000/user_name',
         method: "GET",
         params: {user_name: $scope.user.username}
       }).success(function (result) {
@@ -121,7 +121,7 @@ $scope.userNameExistance = "";
     user.user_name = $scope.user.username;
     user.password  = $scope.user.password;
     user.gender    = $scope.user.gender;
-    user.profile_image = $scope.imgURI;
+    user.base64ImageData = $scope.imgURI;
 
     //$scope.takePicture();
 
@@ -133,7 +133,7 @@ $scope.userNameExistance = "";
 
       $http({
         method: 'POST',
-        url: 'http://localhost:8100/api/sign_up',
+        url: 'http://52.25.164.84:8000/sign_up',
         data: user,
         withCredentials: true,
         headers: {
@@ -166,8 +166,6 @@ $scope.userNameExistance = "";
       return dfd.promise;
     })
   };
-
-
 
 
 });

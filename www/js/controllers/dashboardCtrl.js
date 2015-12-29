@@ -11,7 +11,7 @@ tic_tac_toe.controller('DashboardCtrl', function ($scope,$q, $http, localStorage
     var data = [];
     setTimeout(function () {
       $http({
-        url: 'http://localhost:8100/api/dashboard',
+        url: 'http://52.25.164.84:8000/dashboard',
         method: "GET",
         params: {access_token: access_token}
       }).success(function (result) {
@@ -22,7 +22,9 @@ tic_tac_toe.controller('DashboardCtrl', function ($scope,$q, $http, localStorage
         console.log(data[0].message);
         dfd.resolve(data);
       }).error(function (error) {
-        alert("Comes from error");
+
+          console.log("error",error);
+
       });
 
     })

@@ -2,10 +2,6 @@ tic_tac_toe.controller('loginCtrl', function ($scope, $state,$http,$q,localStora
 
   var token = localStorageService.get('access_token');
 
-
-  console.log("token value in login connn",token);
-
-
   $scope.checkAuth = function(){
 
     if(token){
@@ -35,7 +31,7 @@ tic_tac_toe.controller('loginCtrl', function ($scope, $state,$http,$q,localStora
     var data = [];
     setTimeout(function () {
       $http({
-        url: 'http://localhost:8100/api/initialize_game',
+        url: 'http://52.25.164.84:8000/initialize_game',
         method: 'POST',
         data: user,
         withCredentials: true,
@@ -68,7 +64,7 @@ tic_tac_toe.controller('loginCtrl', function ($scope, $state,$http,$q,localStora
 
       setTimeout(function () {
         $http({
-          url: 'http://localhost:8100/api/login',
+          url: 'http://52.25.164.84:8000/login',
           method: "GET",
           params: {user_name: $scope.user.username, password: $scope.user.password}
         }).success(function (result) {
