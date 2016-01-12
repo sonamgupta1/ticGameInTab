@@ -1,171 +1,160 @@
-tic_tac_toe.controller('signupCtrl', function ($scope, $http,$q,$cordovaCamera, $state,$cordovaFileTransfer,localStorageService) {
-  $scope.user        = {};
-  $scope.choice      = "";
-  $scope.user.gender = '';
+tic_tac_toe.controller('signupCtrl', function ($scope, $http, $q, $cordovaCamera, $state, $cordovaFileTransfer, localStorageService) {
+    $scope.user = {};
+    $scope.choice = "";
+    $scope.user.gender = '';
 
 
-$scope.userNameExistance = "";
+    $scope.userNameExistance = "";
 
-  $scope.tic1 = "";
+    $scope.tic1 = "";
 
-  $scope.buttonDisable = false ;
+    $scope.buttonDisable = false;
 
-  $scope.getGameId = function(access_token1){
+    $scope.getGameId = function (access_token1) {
 
-    var user = {};
+        var user = {};
 
-    var access_token = access_token1;
+        var access_token = access_token1;
 
-    user.access_token = access_token;
+        user.access_token = access_token;
 
-    var dfd = $q.defer();
+        var dfd = $q.defer();
 
-    var data = [];
-    setTimeout(function () {
-      $http({
-        url: 'http://52.25.164.84:8000/initialize_game',
-        method: 'POST',
-        data: user,
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8'
-        }
-      }).success(function (result) {
-        console.log("result for game api", result);
+        var data = [];
+        setTimeout(function () {
+            $http({
+                url: 'http://localhost:8100/api/initialize_game',
+                method: 'POST',
+                data: user,
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).success(function (result) {
 
-        data.push(result);
+                data.push(result);
 
-        dfd.resolve(data);
-      }).error(function (error) {
-        console.log("error", error);
-      });
+                dfd.resolve(data);
+            }).error(function (error) {
+                console.log("error", error);
+            });
 
-    })
-    return dfd.promise;
-  };
-
-  $scope.checkUserName = function() {
-
-    var dfd = $q.defer();
-
-    var data = [];
-    setTimeout(function () {
-
-      $http({
-        url: 'http://52.25.164.84:8000/user_name',
-        method: "GET",
-        params: {user_name: $scope.user.username}
-      }).success(function (result) {
-
-        data.push(result);
-
-        $scope.userNameExistance = data[0].data;
-
-        console.log("result =========", $scope.userNameExistance);
-
-        if (parseInt($scope.userNameExistance) === 1) {
-
-          $scope.tic1 = 1;
-
-          $scope.buttonDisable = true;
-
-        }
-        else {
-
-          $scope.tic1 = 0;
-
-          $scope.buttonDisable = false;
-
-
-        }
-        dfd.resolve(data);
-      }).error(function (error) {
-        console.log("error===========", error);
-      });
-      return dfd.promise;
-    })
-  };
-
-  $scope.takePicture = function() {
-    var options = {
-      quality : 75,
-      destinationType : Camera.DestinationType.DATA_URL,
-      sourceType : Camera.PictureSourceType.CAMERA,
-      allowEdit : true,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 200,
-      targetHeight: 200,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false
+        })
+        return dfd.promise;
     };
 
-    $cordovaCamera.getPicture(options).then(function(imageData) {
+    $scope.checkUserName = function () {
 
-      //var imgURI = "data:image/jpeg;base64," + imageData;
+        var dfd = $q.defer();
 
-      $scope.imgURI = "data:image/jpeg;base64," + imageData;
+        var data = [];
+        setTimeout(function () {
 
-      //$scope.images.push(imgURI);
+            $http({
+                url: 'http://localhost:8100/api/user_name',
+                method: "GET",
+                params: {user_name: $scope.user.username}
+            }).success(function (result) {
 
-    }, function(err) {
-      // An error occured. Show a message to the user
-    });
+                data.push(result);
+
+                $scope.userNameExistance = data[0].data;
+
+                if (parseInt($scope.userNameExistance) === 1) {
+
+                    $scope.tic1 = 1;
+
+                    $scope.buttonDisable = true;
+
+                }
+                else {
+
+                    $scope.tic1 = 0;
+
+                    $scope.buttonDisable = false;
 
 
-  }
+                }
+                dfd.resolve(data);
+            }).error(function (error) {
+                console.log("error", error);
+            });
+            return dfd.promise;
+        })
+    };
 
-  $scope.register = function() {
+    $scope.takePicture = function () {
+        var options = {
+            quality: 75,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            allowEdit: true,
+            encodingType: Camera.EncodingType.JPEG,
+            targetWidth: 200,
+            targetHeight: 200,
+            popoverOptions: CameraPopoverOptions,
+            saveToPhotoAlbum: false
+        };
 
-    var user       = {};
-    user.name      = $scope.user.name;
-    user.user_name = $scope.user.username;
-    user.password  = $scope.user.password;
-    user.gender    = $scope.user.gender;
-    user.base64ImageData = $scope.imgURI;
+        $cordovaCamera.getPicture(options).then(function (imageData) {
 
-    //$scope.takePicture();
+            $scope.imgURI = "data:image/jpeg;base64," + imageData;
 
-    var dfd = $q.defer();
+        }, function (err) {
+            console.log(error);
+        });
 
-    var data = [];
 
-    setTimeout(function () {
+    }
 
-      $http({
-        method: 'POST',
-        url: 'http://52.25.164.84:8000/sign_up',
-        data: user,
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8'
-        }
-      }).success(function (result) {
-        data.push(result);
-        alert(data[0].message);
-        if (parseInt(data[0].status) === 200) {
+    $scope.register = function () {
 
-          console.log("sign up result",data[0]);
+        var user = {};
+        user.name = $scope.user.name;
+        user.user_name = $scope.user.username;
+        user.password = $scope.user.password;
+        user.gender = $scope.user.gender;
+        user.base64ImageData = $scope.imgURI;
 
-          localStorageService.set('access_token', data[0].data[0].access_token);
+        var dfd = $q.defer();
 
-          var access_token = localStorageService.get('access_token');
+        var data = [];
 
-          $scope.getGameId(access_token);
+        setTimeout(function () {
 
-          $state.go('menu.dashboard');
+            $http({
+                method: 'POST',
+                url: 'http://localhost:8100/api/sign_up',
+                data: user,
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).success(function (result) {
+                data.push(result);
+                alert(data[0].message);
+                if (parseInt(data[0].status) === 200) {
 
-          $scope.user = "";
-          $scope.user.username = "";
-          $scope.user.password = "";
-        }
-        dfd.resolve(data);
-      }).error(function (error) {
-        //alert(error.message);
-        console.log("error===========", JSON.stringify(error));
-      })
-      return dfd.promise;
-    })
-  };
+                    localStorageService.set('access_token', data[0].data[0].access_token);
+
+                    var access_token = localStorageService.get('access_token');
+
+                    $scope.getGameId(access_token);
+
+                    $state.go('menu.dashboard');
+
+                    $scope.user = "";
+                    $scope.user.username = "";
+                    $scope.user.password = "";
+                }
+                dfd.resolve(data);
+            }).error(function (error) {
+                //alert(error.message);
+                console.log("error", JSON.stringify(error));
+            })
+            return dfd.promise;
+        })
+    };
 
 
 });

@@ -4,7 +4,7 @@
 // the 2nd parameter is an array of 'requires'
 var tic_tac_toe = angular.module('starter', ['ionic', 'ngCordova'])
 
-tic_tac_toe.run(function ($ionicPlatform, $ionicPopup) {
+tic_tac_toe.run(function ($ionicPlatform,$state, $ionicPopup) {
   $ionicPlatform.ready(function () {
 
       if(window.Connection) {
@@ -34,8 +34,30 @@ tic_tac_toe.run(function ($ionicPlatform, $ionicPopup) {
       StatusBar.styleDefault();
     }
 
+      });
+
+
+
+    // Disable BACK button on home
+    $ionicPlatform.registerBackButtonAction(function(event) {
+        if (true) { // your check here
+            $ionicPopup.confirm({
+                title: 'System warning',
+                template: 'are you sure you want to exit from game?'
+            }).then(function(res) {
+                if (res) {
+                    ionic.Platform.exitApp();
+                }
+            })
+        }
+    }, 100);
+
+
   });
-})
+
+
+
+
 
 
 tic_tac_toe.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
